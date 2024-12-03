@@ -1,0 +1,26 @@
+---
+title: "Initial report"
+output: html_document
+date: "2024-12-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data exploration
+
+## Pre-processing
+- Tyhjät arvot
+- Standardointi yms. mallikohtaiset datan manipulointikeinot
+
+## Feature selection
+- Featurien karsiminen
+- PCA
+
+## Performance estimation
+- Miten mallien suorituskykyä mitattiin?
+
+## Model selection
+- Käydään läpi mallit: mitä malleja valittiin mukaan ja miksi
+- 
