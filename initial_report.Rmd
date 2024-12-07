@@ -11,11 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Data exploration
 
 ## Pre-processing
-- Tyhjät arvot
+The data was quite clean so it did not require a lot of pre-processing. The feature "parentspecies" had 210 null values in the training data and 33 null values in the test data, so a decision had to be made on this feature.
 - Standardointi yms. mallikohtaiset datan manipulointikeinot
 
 ## Feature selection
-- Featurien karsiminen
+Subset selection was performed using a forward stepwise selection approach. The features were first sorted by feature importance. The best subset of features was selected by first training a model with only the most important feature selected. Then, subsequent models were trained by adding one feature at a time in order of feature importance. 
+
+During the subset selection, each model was evaluated by performing a 5-fold cross-validation and scoring the models by the coefficient of determination. 
+
+The feature importances were computed using the permutation feature importance technique, where the values of a single feature are randomly shuffled and the importance of this feature is determined by the level of degradation of the model's performance.  
 - PCA
 
 ## Performance estimation
@@ -23,4 +27,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Model selection
 - Käydään läpi mallit: mitä malleja valittiin mukaan ja miksi
-- 
+First, several different models were trained and evaluated for reference using the default parameters. The models were trained with all features and evaluated using a 10-fold cross-validation. A simple least squares linear regression model performed surprisingly well, but the best scores were attained by nonlinear models, such as Random Forest and Support Vector Regressor (SVR).
+
+We chose to focus on Random Forest and SVR, as we believed that these models had the most potential of the models tested. Next, feature selection and parameter tuning was performed for both models individually.
