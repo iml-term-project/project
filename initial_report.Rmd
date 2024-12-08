@@ -9,6 +9,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Data exploration
+The GeckoQ dataset contains 26 columns. The variable log_pSat_Pa is the response variable, while the remaining columns are considered predictor variables. The ID column is not related to the response variable and is therefore excluded from the exploratory data analysis. The dataset includes 24 numerical predictors and one categorical predictor. The predictor MV is a continuous variable, while the rest of the numerical predictors are discrete variables. Parentspecies is the only categorical variable.
+
+The following chart shows the correlation between all variables in the GeckoQ dataset. The correlation matrix calculates the linear relationship between pairs of variables. A positive value indicates a positive correlation between the variables, while a negative value indicates a negative correlation. A value of +1 represents a perfect positive correlation, whereas a value of -1 represents a perfect negative correlation. Weak correlations range from 0.1 to 0.3, moderate correlations from 0.3 to 0.5, and strong correlations from 0.5 to 1.
+
+![Correlation matrix](images/correlation_matrix.png){ width=100% }
+
+The chart highlights that the predictors NumHBondDonors and NumOfConf have a strong negative correlation with the response variable. Moderate negative correlations with the response variable can be observed in the variables NumOfAtoms, hyfroxyl (alkyl), carboxylic acid, and hydroperoxide. No variable exhibits a moderate or strong positive correlation.
+
+In regression problems, collinearity between predictors can cause issues, as it becomes more difficult to isolate the individual effects of each predictor on the response variable. In the upper left corner of the correlation matrix, we observe strong correlations between several predictors. Collinearity among multiple predictors can lead to multicollinearity, where predictors are highly correlated with one another.
+
+In addition to the correlation matrix, the Variance Inflation Factor (VIF) can be used to assess multicollinearity. The following chart displays the VIF values for all variables in the GeckoQ dataset.
+
+![VIF-table](images/vif.png){ width=100% }
+
+Multicollinearity exists in a predictor if its VIF value exceeds 10. We can see that aldehyde, ketone, ester, and peroxide exhibit high multicollinearity. Additionally, several predictors have a VIF value of infinity (inf), which indicates perfect linear dependence. This suggests that one predictor can be entirely predicted by another predictor.
+
+-Write about outliers and skewness of the data
 
 ## Pre-processing
 The data was quite clean so it did not require a lot of pre-processing. The feature "parentspecies" had 210 null values in the training data and 33 null values in the test data, so a decision had to be made on this feature.
