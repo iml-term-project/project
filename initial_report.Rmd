@@ -1,6 +1,9 @@
 ---
 title: "Initial report"
-output: html_document
+author: "Group 210"
+output:
+  pdf_document: default
+  html_document pdf_document: default
 date: "2024-12-03"
 ---
 
@@ -41,11 +44,12 @@ The feature importances were computed using the permutation feature importance t
 Principal component analysis (PCA) was also done on the data set to see, whether selecting features this way would be 
 beneficial. Majority of the variance in the data was explained well without the last few components.
 
-![](./niklas/pca_variances.png)
+![](./niklas/pca_variances.png){ width=100% }
 
 R²-scores were also tested for, by increasing number of principal components, using multiple models to see 
 where we would start seeing diminishing returns.
-![](./niklas/R2_vs_nPCA.png)
+
+![](./niklas/R2_vs_nPCA.png){ width=100% }
 
 
 ## Performance estimation
