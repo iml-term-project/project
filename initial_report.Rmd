@@ -67,7 +67,7 @@ beneficial. Majority of the variance in the data was explained well without the 
 R²-scores were also tested for, by increasing number of principal components, using multiple models to see  
 where we would start seeing diminishing returns. 
 
-![](./niklas/R2_vs_nPCA.png){ width=100% } 
+![](./niklas/PCA_R2.png){ width=100% } 
 
 - PCA 
 
@@ -76,6 +76,9 @@ where we would start seeing diminishing returns.
 - Features importances 
 
 ## Performance estimation 
+
+Based on the testing done on the default models, three models, SVR, GB and RF, were chosen for further optimization.
+R² and MSE were chosen as the two scoring methods and each model's performance was estimated using 5-fold cross validation.
 
 The performance of models was estimated using R²-score and MSE. Each model was tested by performing 5-fold cross validation  
 
