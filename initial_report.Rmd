@@ -32,7 +32,7 @@ The boxplot can be used to analyze how observations are distributed for each fea
 In addition to the correlation matrix, scatterplots can provide insights into the relationships between variables. The correlation matrix shows the linear correlation between variables, while scatterplots reveal non-linear relationships between pairs of variables. The scatterplot, where the response variable is paired with each of the predictors, can be found in the appendix (??). The predictors x, y, and z, which had strong correlations in the correlation matrix, appear to exhibit similar non-linear relationships with the response variable. Additionally, the variable aromatic hydroxyl
 
 ## Pre-processing 
-The data was quite clean so it did not require a lot of pre-processing. The feature "parentspecies" had 210 null values in the training data and 33 null values in the test data. We replaced the null values with the mode of the feature, which was 'toluene' (?).
+The data was quite clean so it did not require a lot of pre-processing. The feature "parentspecies" had 210 null values in the training data and 33 null values in the test data. Wedecided to replace the null values with the mode of the feature, which was 'toluene' (?).
 
 Since "parentspecies" was the only categorical variable and had only x unique values, we applied the One-Hot Encoding method to it. This method converts categorical data into x binary vectors, where the column representing the original value for a given row is assigned a value of 1, while all other columns are assigned 0.
 
@@ -54,10 +54,15 @@ We chose to focus on Random Forest and SVR, as we believed that these models had
 
 
 ## Feature selection 
-Subset selection was performed using a forward stepwise selection approach. The features were first sorted by feature importance. The best subset of features was selected by first training a model with only the most important feature selected. Then, subsequent models were trained by adding one feature at a time in order of feature importance.  
-During the subset selection, each model was evaluated by performing a 5-fold cross-validation and scoring the models by the coefficient of determination.  
+Two kinds of subset selection methods were performed to identify the subset of features that gave the best performance for each model: the forward stepwise selection and a selection based on permutation importances. In both methods each model was evaluated by performing a 5-fold cross-validation and scoring the models by the coefficient of determination ($R^2$) and mean squared error (MSE). The final feature subsets were chosen based on these performance metrics.
 
-The feature importances were computed using the permutation feature importance technique, where the values of a single feature are randomly shuffled and the importance of this feature is determined by the level of degradation of the model's performance.   
+The implementation of forward stepwise selection was standard. Starting from zero features, at each point of the algorithm the features not yet fitted were iterated over and added to the model individually. At each step, the feature that improved the model performance the most was selected and the algorithm was run until every feature was added. 
+
+In the second feature selection method the features were first sorted by feature importance. These feature importances were computed using the permutation feature importance technique, where the values of a single feature are randomly shuffled and the importance of the feature is determined by the level of degradation of the model's performance.  The best subset of features was selected by first training a model with only the most important feature selected. Then, subsequent models were trained by adding one feature at a time in order of feature importance.
+
+Surprisingly, differences between these two subset selection methods were quite substantial with Random Forest, with the permutation importance method resulting in better scores even with models with over 20 features. For SVM and GB, the forward selection method fared better than the permutation importance selection when the number of features was fewer than 20, after which the differences were negligible.
+
+![Correlation matrix](images/subset_selection_results.png){ width=100% } 
 
 Principal component analysis (PCA) was also done on the data set to see, whether selecting features this way would be  
 beneficial. Majority of the variance in the data was explained well without the last few components. 
