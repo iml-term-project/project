@@ -109,7 +109,7 @@ The workflow was the first implement a random search to find some initial best m
 ranging over values near the best hyper parameters obtained in the random search. The best model obtained with the random search reached the R²-score of 0.734716. The the best hyper parameters for this model were:
 ```{r,echo=FALSE}
 data <- read.csv('niklas/RF_random_top_models.csv')
-kable(data, caption = "Table: Top 10 RF Models") %>%
+kable(data, caption = "Table: Best RF Random Search Model") %>%
   kable_styling() %>%
   column_spec(3:ncol(data), width = "0.5in") %>%
   row_spec(0, angle = 15) 
