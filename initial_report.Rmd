@@ -4,11 +4,17 @@ author: "Group 210"
 output: 
   pdf_document: default 
   html_document pdf_document: default 
+header-includes:
+  - \usepackage{graphicx}
+bibliography: references.bib
 date: "2024-12-03" 
 --- 
 
 ```{r setup, include=FALSE} 
-knitr::opts_chunk$set(echo = TRUE) 
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(knitr)
+library(kableExtra)
 ``` 
 ## Data exploration 
 The GeckoQ dataset contains 26 columns. The variable log_pSat_Pa is the response variable, while the remaining columns are considered predictor variables. The ID column is not related to the response variable and is therefore excluded from the exploratory data analysis. The dataset includes 24 numerical predictors and one categorical predictor. The predictor MV is a continuous variable, while the rest of the numerical predictors are discrete variables. Parentspecies is the only categorical variable. 
@@ -48,7 +54,17 @@ We chose to focus on Random Forest and SVR, as we believed that these models had
 
 - Vertaile eka kaikki malleja niiden default parametrien kanssa 
 
-- Valitaan SVR, RF ja GradientBoosting  
+- Valitaan SVR, RF ja GradientBoosting
+
+### Random Forest Regression
+
+Random Forest (RF) is an ensemble learning method, meaning that it combines predictions of multiple models
+to produce a more accurate prediction [@RF1]. In the case of RF, predictions of multiple decision trees 
+are combined, where model is trained on random subsets of features and data.
+
+RF is a good candidate for our machine learning model, as it is great at handling large amount of features, and 
+the model handles non-linear relationships well without needing any explicit transformations on the features [@RF2]. 
+The model is also robust against over fitting.
 
 - Ajetaan SVR, RF ja GB 5-fold cross validation kaikilla feature selection metodeilla 
 
@@ -64,21 +80,19 @@ Surprisingly, differences between these two subset selection methods were quite 
 
 ![Correlation matrix](images/subset_selection_results.png){ width=100% } 
 
-Principal component analysis (PCA) was also done on the data set to see, whether selecting features this way would be  
-beneficial. Majority of the variance in the data was explained well without the last few components. 
+Principal component analysis (PCA) was also done on the data set to see, whether selecting features this way would be  beneficial. Majority of the variance in the data was explained well without the last few components, as we see that 
+the curve for cumulative proportion of variance plateaus at around 24 components in the figure below. 
 
-![](./niklas/pca_variances.png){ width=100% } 
+![](./niklas/PCA_variance_explained.png){ width=100% } 
 
 R²-scores were also tested for, by increasing number of principal components, using multiple models to see  
-where we would start seeing diminishing returns. 
+where we would start seeing diminishing returns. The R²-scores of all models follow similar trends. The initial 
+boost in performance after adding the first few components is significant, but soon we start to see less proportionally 
+significant increases in performance adding components.
 
 ![](./niklas/PCA_R2.png){ width=100% } 
 
-- PCA 
 
-- Stepwise selection 
-
-- Features importances 
 
 ## Performance estimation 
 
@@ -88,6 +102,30 @@ R² and MSE were chosen as the two scoring methods and each model's performance 
 The performance of models was estimated using R²-score and MSE. Each model was tested by performing 5-fold cross validation  
 
 on the training data set. The means of the scores of these cross-validation runs were used to compare the models. 
+
+### RF Parameter Tuning
+
+The workflow was the first implement a random search to find some initial best model and then to perform a grid search 
+ranging over values near the best hyper parameters obtained in the random search. The best model obtained with the random search reached the R²-score of 0.734716. The the best hyper parameters for this model were:
+```{r,echo=FALSE}
+data <- read.csv('niklas/RF_random_top_models.csv')
+kable(data, caption = "Table: Top 10 RF Models") %>%
+  kable_styling() %>%
+  column_spec(3:ncol(data), width = "0.5in") %>%
+  row_spec(0, angle = 15) 
+```
+
+
+Around this values we performed the grid search, for which the top 10 best performing models for RF were:
+```{r,echo=FALSE}
+data <- read.csv('niklas/RF_top_models.csv')
+kable(data, caption = "Table: Top 10 RF Models") %>%
+  kable_styling() %>%
+  column_spec(3:ncol(data), width = "0.5in") %>%
+  row_spec(0, angle = 15) 
+```
+We can see that the best R² score for RF occurs at around 0.735. The ranking for the top models is the exact same 
+for both scoring systems. 
 
 - SVR, RF ja GB mallien parhaiten selittävät featuret valitaan hyperparametri tuunaukseen.
 
