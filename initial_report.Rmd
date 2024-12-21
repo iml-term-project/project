@@ -84,6 +84,19 @@ The performance of models was estimated using R²-score and MSE. Each model was 
 
 on the training data set. The means of the scores of these cross-validation runs were used to compare the models. 
 
+## SVR Parameter Tuning
+
+Default SVR achieved best R2 performance of 0.7505 on PCA with 30 component and we started the hyperparameter with it. We also tried PCA with different number of components. The best result of 0.751277 was obtained with all 30 components. The exclusion of components only reduced R2 and MSE. We found it unusual that the best 
+R2 and MSE performance was achieved by removing only one component, especially since the last 9 components explained only 1% of the model's variance. Consequently, it was decided to also hyperparameter-tune the second-best feature selection approach stepwise feature selection with 22 features. In the inial feature selection analysis, this approach achieved r2 performance of 0.7475. However, during hyperparameter tuning, the stepwise approach outperformed PCA, leading us to proceed exclusively with the stepwise approach for SVR.
+
+Among all the default models, SVR was the second most computationally expensive model after polynomial model. Thus, hyperparameter tuning was only limited to parameters kernel, gamma, C and epsilon. RandomizedSearchCV and GridSearchCV were used to identify the optimal values for parameters. We started by comparing different kernel types, and noticed quickly that sigmoid, precomputer and linear performed badly comparing to 'rbf' and 'poly'. Kernel 'poly' was extremely sensitive to increases of gamma, and we decided to limit the gamma values to 0.5 in order to run our hyperparameter tuning in sufficient time range and avoid computational issues. In the results, rbf outperformed poly kernel. However, it is worth noting that excluding the degree parameter from the hyperparameter tuning might have impacted the performance of the 'poly' kernel.
+
+We began optimizing the 'rbf' kernel by testing gamma values between 0.01 and 0.5, as gamma appeared to significantly affect computational performance. We observed a pattern where increasing gamma resulted in poorer R2 and MSE performance. The optimal value of gamma found  range of 0.02-0.035. There was no clear of pattern or trend when altering parameter 'epsilon'. However, in one of our grid searches, an epsilon value of 0.678571 appeared in the best-performing parameter combinations. Parameter C was tested with values from range 2 to 10 and the results clearly indicated that best perfomance was achieved usually with the largest C values. The table below highlights the result from the last grid search, where parameter gamma ranged from 0.020-0.027, C parameter ranges from 8-10 and epsilon was fixed to 0.678571.
+
+The best performance of 0.753750 was achieved with gamma was 0.022333 and C=10. In addition, we can observe that the top-performing models was same for R2 and MSE.
+
+From all the default models, SVR was 
+
 - SVR, RF ja GB mallien parhaiten selittävät featuret valitaan hyperparametri tuunaukseen.
 
 - Selitään kaikkien mallien hyperparametri tuunauksesta. 
