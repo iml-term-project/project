@@ -64,7 +64,12 @@ are combined, where model is trained on random subsets of features and data.
 
 RF is a good candidate for our machine learning model, as it is great at handling large amount of features, and 
 the model handles non-linear relationships well without needing any explicit transformations on the features [@RF2]. 
-The model is also robust against over fitting.
+The model is also robust against overfitting.
+
+### Gradient Boosting regression
+Gradient Boosting is another ensemble technique, in which the predictive model is composed of multiple weak learners, typically decision trees. A Gradient Boosting model learns sequentially and slowly: each decision tree is fitted to the residuals of the previous tree, which represent the negative gradient of a loss function. With each decision tree, the aim is to improve slowly on the previous tree, until the algorithm converges to a local minimum. 
+
+We considered Gradient Boosting to be a good alternative to this problem, as it can handle non-linearity and collinearity in the training data. Implementations such as LightGBM and scikit-learn's HistGradientBoostingRegressor are also pleasant to use with larger data sets, as they improve on the time complexity of the algorithm by using data structures called histograms to optimize the sorting of sample values. On the other hand, parameter tuning can be finicky with Gradient Boosting, as it can be a bit susceptible to overfitting. 
 
 - Ajetaan SVR, RF ja GB 5-fold cross validation kaikilla feature selection metodeilla 
 
@@ -127,6 +132,19 @@ kable(data, caption = "Table: Top 10 RF Models") %>%
 We can see that the best R² score for RF occurs at around 0.735. The ranking for the top models is the exact same 
 for both scoring systems. 
 
+### Gradient Boosting Parameter Tuning
+For Gradient Boosting, we chose to tune parameters "max_depth", "learning_rate", "max_iter", "min_samples_leaf", "max_features" and "max_leaf_nodes". "Max_depth" limits the depth of each constructed decision tree which can help with overfitting. "Learning_rate" affects the step size of the gradient descent optimization algorithm, with smaller value representing a smaller change in the model by each tree. "Max_iter" determines the maximum number of constructed trees, while "min_samples_leaf" determines the minimum number of samples per a leaf in the decision trees. "Max_features" limits the number of features considered at every node split while constructing the trees, which might also prevent overfitting. Finally, "max_leaf_nodes" limits the maximum number of leaves for each tree.
+
+First a randomized search with a 5-fold cross-validation was run with larger value ranges for each parameter. The results suggested that the model performance improved with smaller values of parameters "learning_rate", "max_features" and higher values of "max_iter" and "min_samples_leaf". Based on these results, the possible value ranges of each parameter was adjusted, and a grid search with a 5-fold cross-validation was run. The final parameter tuning results are as follows:
+```{r,echo=FALSE}
+data <- read.csv('okko/GB_top_10_models.csv')
+kable(data, caption = "Table: Top 10 RF Models") %>%
+  kable_styling() %>%
+  column_spec(3:ncol(data), width = "0.5in") %>%
+  row_spec(0, angle = 15) 
+```
+
+We decided to train the final model with the parameters of the best performing model of this grid search. While the low value of parameter "learning_rate" and the high value of "max_iter" make the model a bit more susceptible to overfitting, the low value of "max_features" provides some regularization. This model got a public score of 0.7515 and a private score of 0.7388 in the Kaggle competition.
 - SVR, RF ja GB mallien parhaiten selittävät featuret valitaan hyperparametri tuunaukseen.
 
 - Selitään kaikkien mallien hyperparametri tuunauksesta. 
